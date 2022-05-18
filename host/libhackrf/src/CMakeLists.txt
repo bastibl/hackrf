@@ -27,8 +27,8 @@ set(c_sources ${CMAKE_CURRENT_SOURCE_DIR}/hackrf.c CACHE INTERNAL "List of C sou
 set(c_headers ${CMAKE_CURRENT_SOURCE_DIR}/hackrf.h CACHE INTERNAL "List of C headers")
 
 # Dynamic library
-add_library(hackrf SHARED ${c_sources})
-set_target_properties(hackrf PROPERTIES VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.0 SOVERSION 0)
+# add_library(hackrf SHARED ${c_sources})
+# set_target_properties(hackrf PROPERTIES VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.0 SOVERSION 0)
 
 # Static library
 add_library(hackrf-static STATIC ${c_sources})
@@ -38,11 +38,19 @@ else()
 	set_target_properties(hackrf-static PROPERTIES OUTPUT_NAME "hackrf")
 endif()
 
-set_target_properties(hackrf PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-set_target_properties(hackrf-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+# set_target_properties(hackrf PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+# set_target_properties(hackrf-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
 # Dependencies
-target_link_libraries(hackrf ${LIBUSB_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+# target_link_libraries(hackrf ${LIBUSB_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(hackrf-static ${LIBUSB_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+target_include_directories(hackrf-static PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>  # <prefix>/include
+  ${LIBUSB_INCLUDE_DIRS}
+  ${THREADS_PTHREADS_INCLUDE_DIR}
+  )
    
 # For cygwin just force UNIX OFF and WIN32 ON
 if( ${CYGWIN} )
@@ -51,10 +59,10 @@ if( ${CYGWIN} )
 endif( ${CYGWIN} )
 
 if( ${UNIX} )
-   install(TARGETS hackrf
-           LIBRARY DESTINATION lib${LIB_SUFFIX}
-           COMPONENT sharedlibs
-           )
+   # install(TARGETS hackrf
+   #         LIBRARY DESTINATION lib${LIB_SUFFIX}
+   #         COMPONENT sharedlibs
+   #         )
    install(TARGETS hackrf-static
            ARCHIVE DESTINATION lib${LIB_SUFFIX}
            COMPONENT staticlibs
@@ -66,10 +74,10 @@ if( ${UNIX} )
 endif( ${UNIX} )
 
 if( ${WIN32} )
-   install(TARGETS hackrf
-           DESTINATION bin
-           COMPONENT sharedlibs
-           )
+   # install(TARGETS hackrf
+   #         DESTINATION bin
+   #         COMPONENT sharedlibs
+   #         )
    install(TARGETS hackrf-static
            DESTINATION bin
            COMPONENT staticlibs

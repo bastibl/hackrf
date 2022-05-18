@@ -350,39 +350,39 @@ static int prepare_transfers(
 
 static int detach_kernel_drivers(libusb_device_handle* usb_device_handle)
 {
-	int i, num_interfaces, result;
-	libusb_device* dev;
-	struct libusb_config_descriptor* config;
+	/* int i, num_interfaces, result; */
+	/* libusb_device* dev; */
+	/* struct libusb_config_descriptor* config; */
 
-	dev = libusb_get_device(usb_device_handle);
-	result = libusb_get_active_config_descriptor(dev, &config);
-	if( result < 0 )
-	{
-		last_libusb_error = result;
-		return HACKRF_ERROR_LIBUSB;
-	}
+	/* dev = libusb_get_device(usb_device_handle); */
+	/* result = libusb_get_active_config_descriptor(dev, &config); */
+	/* if( result < 0 ) */
+	/* { */
+	/* 	last_libusb_error = result; */
+	/* 	return HACKRF_ERROR_LIBUSB; */
+	/* } */
 
-	num_interfaces = config->bNumInterfaces;
-	libusb_free_config_descriptor(config);
-	for(i=0; i<num_interfaces; i++)
-	{
-		result = libusb_kernel_driver_active(usb_device_handle, i);
-		if( result < 0 )
-		{
-			if( result == LIBUSB_ERROR_NOT_SUPPORTED ) {
-				return 0;
-			}
-			last_libusb_error = result;
-			return HACKRF_ERROR_LIBUSB;
-		} else if( result == 1 ) {
-			result = libusb_detach_kernel_driver(usb_device_handle, i);
-			if( result != 0 )
-			{
-				last_libusb_error = result;
-				return HACKRF_ERROR_LIBUSB;
-			}
-		}
-	}
+	/* num_interfaces = config->bNumInterfaces; */
+	/* libusb_free_config_descriptor(config); */
+	/* for(i=0; i<num_interfaces; i++) */
+	/* { */
+	/* 	result = libusb_kernel_driver_active(usb_device_handle, i); */
+	/* 	if( result < 0 ) */
+	/* 	{ */
+	/* 		if( result == LIBUSB_ERROR_NOT_SUPPORTED ) { */
+	/* 			return 0; */
+	/* 		} */
+	/* 		last_libusb_error = result; */
+	/* 		return HACKRF_ERROR_LIBUSB; */
+	/* 	} else if( result == 1 ) { */
+	/* 		result = libusb_detach_kernel_driver(usb_device_handle, i); */
+	/* 		if( result != 0 ) */
+	/* 		{ */
+	/* 			last_libusb_error = result; */
+	/* 			return HACKRF_ERROR_LIBUSB; */
+	/* 		} */
+	/* 	} */
+	/* } */
 	return HACKRF_SUCCESS;
 }
 
@@ -390,15 +390,15 @@ static int set_hackrf_configuration(libusb_device_handle* usb_device, int config
 {
 	int result, curr_config;
 
-	result = libusb_get_configuration(usb_device, &curr_config);
-	if( result != 0 )
-	{
-		last_libusb_error = result;
-		return HACKRF_ERROR_LIBUSB;
-	}
+	/* result = libusb_get_configuration(usb_device, &curr_config); */
+	/* if( result != 0 ) */
+	/* { */
+	/* 	last_libusb_error = result; */
+	/* 	return HACKRF_ERROR_LIBUSB; */
+	/* } */
 
-	if(curr_config != config)
-	{
+	/* if(curr_config != config) */
+	/* { */
 		result = detach_kernel_drivers(usb_device);
 		if( result != 0 )
 		{
@@ -410,7 +410,7 @@ static int set_hackrf_configuration(libusb_device_handle* usb_device, int config
 			last_libusb_error = result;
 			return HACKRF_ERROR_LIBUSB;
 		}
-	}
+	/* } */
 
 	result = detach_kernel_drivers(usb_device);
 	if( result != 0 )
@@ -710,17 +710,17 @@ int ADDCALL hackrf_open(hackrf_device** device)
 		return HACKRF_ERROR_INVALID_PARAM;
 	}
 	
-	usb_device = libusb_open_device_with_vid_pid(g_libusb_context, hackrf_usb_vid, hackrf_one_usb_pid);
+	/* usb_device = libusb_open_device_with_vid_pid(g_libusb_context, hackrf_usb_vid, hackrf_one_usb_pid); */
 	
-	if( usb_device == NULL )
-	{
-		usb_device = libusb_open_device_with_vid_pid(g_libusb_context, hackrf_usb_vid, hackrf_jawbreaker_usb_pid);
-	}
+	/* if( usb_device == NULL ) */
+	/* { */
+	/* 	usb_device = libusb_open_device_with_vid_pid(g_libusb_context, hackrf_usb_vid, hackrf_jawbreaker_usb_pid); */
+	/* } */
 	
-	if( usb_device == NULL )
-	{
-		usb_device = libusb_open_device_with_vid_pid(g_libusb_context, hackrf_usb_vid, rad1o_usb_pid);
-	}
+	/* if( usb_device == NULL ) */
+	/* { */
+	/* 	usb_device = libusb_open_device_with_vid_pid(g_libusb_context, hackrf_usb_vid, rad1o_usb_pid); */
+	/* } */
 	
 	if( usb_device == NULL )
 	{
@@ -1291,7 +1291,7 @@ int ADDCALL hackrf_set_freq_explicit(hackrf_device* device,
 	uint8_t length;
 	int result;
 
-	if (if_freq_hz < 2150000000 || if_freq_hz > 2750000000) {
+	if (if_freq_hz < 2150000000ull || if_freq_hz > 2750000000ull) {
 		return HACKRF_ERROR_INVALID_PARAM;
 	}
 
@@ -1958,7 +1958,7 @@ const char* ADDCALL hackrf_error_name(enum hackrf_error errcode)
 	case HACKRF_ERROR_LIBUSB:
 #if defined(LIBUSB_API_VERSION) && (LIBUSB_API_VERSION >= 0x01000103)
 		if(last_libusb_error != LIBUSB_SUCCESS)
-			return libusb_strerror(last_libusb_error);
+			return "libusb strerror"; //libusb_strerror(last_libusb_error);
 #endif
 		return "USB error";
 
