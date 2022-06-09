@@ -55,7 +55,7 @@ elseif(PKG_CONFIG_FOUND)
   find_package(USB1 REQUIRED)
 endif()
 
-find_package(Threads REQUIRED)
+#find_package(Threads REQUIRED)
 
 include_directories(${LIBUSB_INCLUDE_DIR} ${THREADS_PTHREADS_INCLUDE_DIR})
 
