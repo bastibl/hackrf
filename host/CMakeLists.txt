@@ -10,7 +10,7 @@ set(CMAKE_C_FLAGS
     CACHE STRING "C Flags")
 
 add_subdirectory(libhackrf)
-add_subdirectory(hackrf-tools)
+# add_subdirectory(hackrf-tools)
 
 # ##############################################################################
 # Create uninstall target

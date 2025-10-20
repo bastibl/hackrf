@@ -1132,6 +1132,10 @@ extern ADDAPI int ADDCALL hackrf_open_by_serial(
 	const char* const desired_serial_number,
 	hackrf_device** device);
 
+extern ADDAPI int ADDCALL hackrf_open_by_fd(
+	int fd,
+	hackrf_device** device);
+
 /**
  * Close a previously opened device
  * @param[in] device device to close
